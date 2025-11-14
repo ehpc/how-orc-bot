@@ -2,8 +2,24 @@
 
 set dotenv-load
 
+CLUSTER_NAME := "minikube-how-orc-bot"
+
 # Default recipe
 default: run
+
+[group('dev')]
+dev arg:
+  just "dev-{{arg}}"
+
+# Spin up development environment
+[group('dev')]
+dev-up:
+  ./scripts/dev_up.sh {{CLUSTER_NAME}}
+
+# Spin down development environment
+[group('dev')]
+dev-down:
+  ./scripts/dev_down.sh {{CLUSTER_NAME}}
 
 # Format code with rustfmt
 fmt:
