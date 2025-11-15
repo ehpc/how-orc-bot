@@ -3,6 +3,7 @@
 set dotenv-load
 
 CLUSTER_NAME := "minikube-how-orc-bot"
+NAMESPACE := "how-orc-bot"
 
 # Default recipe
 default: run
@@ -14,12 +15,12 @@ dev arg:
 # Spin up development environment
 [group('dev')]
 dev-up:
-  ./scripts/dev_up.sh {{CLUSTER_NAME}}
+  ./scripts/dev_up.sh {{CLUSTER_NAME}} {{NAMESPACE}}
 
 # Spin down development environment
 [group('dev')]
 dev-down:
-  ./scripts/dev_down.sh {{CLUSTER_NAME}}
+  ./scripts/dev_down.sh {{CLUSTER_NAME}} {{NAMESPACE}}
 
 # Format code with rustfmt
 fmt:
@@ -47,3 +48,8 @@ clean:
 # Run tests
 test:
     cargo test
+
+# Run pinggy tunnel
+pinggy:
+    @echo "Starting pinggy tunnel on port $PORT..."
+    ssh -p 443 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -R0:127.0.0.1:$PORT free.pinggy.io

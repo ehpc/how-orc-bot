@@ -1,0 +1,30 @@
+service:
+  port: 8843
+httpRoute:
+  enabled: false
+  parentRefs:
+    - name: default-namespace-gateway
+      sectionName: webhook
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+image:
+  pullPolicy: Never
+env:
+  - name: TELOXIDE_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: minikube-how-orc-bot-secret
+        key: TELOXIDE_TOKEN
+  - name: ASSETS_URL
+    valueFrom:
+      secretKeyRef:
+        name: minikube-how-orc-bot-secret
+        key: ASSETS_URL
+  - name: WEBHOOK_URL
+    valueFrom:
+      secretKeyRef:
+        name: minikube-how-orc-bot-secret
+        key: WEBHOOK_URL

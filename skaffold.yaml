@@ -1,0 +1,31 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: how-orc-bot
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+    - image: how-orc-bot
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        infer:
+          - "src/**/*.rs"
+          - "Cargo.toml"
+          - "Cargo.lock"
+  local:
+    push: false
+    useBuildkit: true
+deploy:
+  helm:
+    releases:
+      - name: how-orc-bot
+        namespace: how-orc-bot
+        chartPath: helm
+        valuesFiles:
+          - helm/values.yaml
+          - helm/values-dev.yaml
+        setValueTemplates:
+          image.repository: "{{.IMAGE_REPO_how_orc_bot}}"
+          image.tag: "{{.IMAGE_TAG_how_orc_bot}}@{{.IMAGE_DIGEST_how_orc_bot}}"
